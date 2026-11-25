@@ -1,0 +1,578 @@
+/* 
+   REGISTER PAGE
+   */
+
+.register-page {
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+
+  position: relative;
+  overflow: hidden;
+
+  background: #0b0b0c;
+
+  color: white;
+}
+
+
+/*
+   LEFT VISUAL SIDE
+  */
+
+.register-visual {
+  position: relative;
+
+  min-height: 100vh;
+
+  display: flex;
+  align-items: flex-end;
+
+  padding: 70px;
+
+  overflow: hidden;
+
+  border-right:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  background:
+    radial-gradient(
+      circle at 70% 20%,
+      rgba(213, 0, 28, 0.2),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #171719,
+      #09090a
+    );
+}
+
+
+.register-visual::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 48%,
+      rgba(255, 255, 255, 0.025) 49%,
+      rgba(255, 255, 255, 0.025) 50%,
+      transparent 51%
+    );
+
+  background-size:
+    90px 90px;
+
+  opacity:
+    0.5;
+}
+
+
+.register-visual-content {
+  position: relative;
+  z-index: 2;
+
+  max-width:
+    720px;
+}
+
+
+.register-visual-content h1 {
+  margin-top:
+    20px;
+
+  font-size:
+    clamp(4.5rem, 8vw, 8rem);
+
+  line-height:
+    0.88;
+
+  letter-spacing:
+    -0.065em;
+
+  font-weight:
+    800;
+}
+
+
+.register-visual-content h1 span {
+  display: block;
+
+  color:
+    #d5001c;
+}
+
+
+.register-visual-content > p:last-of-type {
+  max-width:
+    580px;
+
+  margin-top:
+    28px;
+
+  color:
+    #b5b5bb;
+
+  font-size:
+    1.05rem;
+
+  line-height:
+    1.75;
+}
+
+
+.register-feature-row {
+  display: flex;
+
+  gap:
+    42px;
+
+  margin-top:
+    50px;
+}
+
+
+.register-feature-row div {
+  display: flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    5px;
+}
+
+
+.register-feature-row strong {
+  font-size:
+    1rem;
+}
+
+
+.register-feature-row span {
+  color:
+    #7f7f86;
+
+  font-size:
+    0.84rem;
+}
+
+
+/*
+   RIGHT PANEL
+  */
+
+.register-panel {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    50px;
+}
+
+
+.register-card {
+  width:
+    min(100%, 500px);
+}
+
+
+/*
+   BACK BUTTON
+ */
+
+.register-back {
+  display: inline-flex;
+  align-items: center;
+
+  gap:
+    8px;
+
+  padding:
+    10px 14px;
+
+  margin-bottom:
+    34px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(255, 255, 255, 0.03);
+
+  color:
+    #a8a8ae;
+
+  font-size:
+    0.84rem;
+
+  cursor:
+    pointer;
+
+  transition:
+    0.25s ease;
+}
+
+
+.register-back:hover {
+  color:
+    white;
+
+  background:
+    rgba(213, 0, 28, 0.08);
+
+  border-color:
+    rgba(213, 0, 28, 0.3);
+
+  transform:
+    translateX(-3px);
+}
+
+
+/*
+   BRAND
+   */
+
+.register-brand {
+  display: inline-flex;
+  align-items: center;
+
+  gap:
+    12px;
+
+  font-size:
+    0.9rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.14em;
+}
+
+
+/* 
+   HEADER
+   */
+
+.register-header {
+  margin-top:
+    42px;
+}
+
+
+.register-header h2 {
+  margin-top:
+    10px;
+
+  font-size:
+    clamp(2.4rem, 4vw, 3.8rem);
+
+  line-height:
+    1;
+
+  letter-spacing:
+    -0.05em;
+}
+
+
+.register-header > p:last-child {
+  margin-top:
+    17px;
+
+  color:
+    #8e8e95;
+
+  line-height:
+    1.65;
+}
+
+
+/* 
+   FORM
+   */
+
+.register-form {
+  display: flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    21px;
+
+  margin-top:
+    34px;
+}
+
+
+.register-input {
+  padding-left:
+    48px;
+}
+
+
+/*
+   ROLE SELECTOR
+   */
+
+.role-selector {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap:
+    12px;
+}
+
+
+.role-option {
+  display: flex;
+  align-items: center;
+
+  gap:
+    12px;
+
+  padding:
+    16px;
+
+  text-align:
+    left;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius:
+    16px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color:
+    #c8c8cd;
+
+  cursor:
+    pointer;
+
+  transition:
+    0.25s ease;
+}
+
+
+.role-option:hover {
+  border-color:
+    rgba(213, 0, 28, 0.3);
+
+  background:
+    rgba(213, 0, 28, 0.05);
+
+  transform:
+    translateY(-2px);
+}
+
+
+.role-option.active {
+  border-color:
+    rgba(213, 0, 28, 0.45);
+
+  background:
+    rgba(213, 0, 28, 0.1);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(213, 0, 28, 0.04);
+}
+
+
+.role-option svg {
+  flex-shrink:
+    0;
+
+  color:
+    #d5001c;
+}
+
+
+.role-option div {
+  display: flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    4px;
+}
+
+
+.role-option strong {
+  color:
+    white;
+
+  font-size:
+    0.93rem;
+}
+
+
+.role-option span {
+  color:
+    #797980;
+
+  font-size:
+    0.75rem;
+}
+
+
+/*
+   SUBMIT BUTTON
+   */
+
+.register-submit {
+  width:
+    100%;
+
+  min-height:
+    54px;
+
+  margin-top:
+    4px;
+}
+
+
+/*
+   BACKGROUND GLOWS
+   */
+
+.register-glow {
+  position:
+    absolute;
+
+  border-radius:
+    50%;
+
+  pointer-events:
+    none;
+
+  filter:
+    blur(115px);
+}
+
+
+.register-glow-one {
+  width:
+    360px;
+
+  height:
+    360px;
+
+  top:
+    -100px;
+
+  right:
+    -80px;
+
+  background:
+    rgba(213, 0, 28, 0.14);
+}
+
+
+.register-glow-two {
+  width:
+    300px;
+
+  height:
+    300px;
+
+  left:
+    35%;
+
+  bottom:
+    -130px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+}
+
+
+/*
+   RESPONSIVE
+   */
+
+@media (max-width: 980px) {
+  .register-page {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .register-visual {
+    min-height:
+      50vh;
+
+    padding:
+      42px 28px;
+
+    border-right:
+      none;
+
+    border-bottom:
+      1px solid rgba(255, 255, 255, 0.08);
+  }
+
+
+  .register-visual-content h1 {
+    font-size:
+      clamp(4rem, 14vw, 7rem);
+  }
+
+
+  .register-panel {
+    padding:
+      50px 24px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .register-visual {
+    min-height:
+      44vh;
+
+    padding:
+      32px 20px;
+  }
+
+
+  .register-feature-row {
+    flex-direction:
+      column;
+
+    gap:
+      18px;
+  }
+
+
+  .register-panel {
+    padding:
+      38px 18px;
+  }
+
+
+  .role-selector {
+    grid-template-columns:
+      1fr;
+  }
+}

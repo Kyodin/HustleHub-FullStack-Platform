@@ -1,0 +1,272 @@
+name: HustleHub CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+
+jobs:
+
+  # BACKEND
+  backend:
+    name: Backend Tests and Security
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: test
+      JWT_SECRET: hustlehub-ci-test-secret
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Run backend static analysis
+        run: npm run lint
+
+      - name: Run backend tests
+        run: npm test
+
+      - name: Run production dependency security audit
+        run: npm audit --omit=dev --audit-level=high
+
+
+  # FRONTEND
+  frontend:
+    name: Frontend Tests Build and Security
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm test -- --run
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Run frontend security audit
+        working-directory: frontend
+        run: npm audit --audit-level=high
+
+
+  # NEWMAN API INTEGRATION TESTING
+  newman:
+    name: Newman API Integration Tests
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: test
+      JWT_SECRET: hustlehub-ci-test-secret
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      FRONTEND_ORIGIN: http://localhost:5173
+      PORT: 3000
+      SSL_KEY_PATH: ssl/server.key
+      SSL_CERT_PATH: ssl/server.crt
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Generate CI SSL certificate
+        run: |
+          mkdir -p ssl
+
+          openssl req \
+            -x509 \
+            -newkey rsa:2048 \
+            -nodes \
+            -keyout ssl/server.key \
+            -out ssl/server.crt \
+            -days 365 \
+            -subj "/CN=localhost"
+
+      - name: Start HustleHub backend
+        run: |
+          npm start > server.log 2>&1 &
+          echo $! > server.pid
+
+      - name: Wait for backend
+        run: |
+          echo "Waiting for HustleHub backend..."
+
+          for i in {1..30}; do
+            if curl \
+              --insecure \
+              --fail \
+              --silent \
+              --output /dev/null \
+              https://localhost:3000; then
+
+              echo "Backend is running."
+              exit 0
+            fi
+
+            sleep 2
+          done
+
+          echo "Backend failed to start."
+          cat server.log
+          exit 1
+
+      - name: Run Newman integration tests
+        run: |
+          npx newman run \
+            postman/HustleHub-Part2.postman_collection.json \
+            -e postman/HustleHub-Local.postman_environment.json \
+            --insecure
+
+      - name: Display backend log on failure
+        if: failure()
+        run: |
+          cat server.log || true
+
+
+  # DOCKER
+  docker:
+    name: Docker Container Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate Docker SSL certificate
+        run: |
+          mkdir -p ssl
+
+          openssl req \
+            -x509 \
+            -newkey rsa:2048 \
+            -nodes \
+            -keyout ssl/server.key \
+            -out ssl/server.crt \
+            -days 365 \
+            -subj "/CN=localhost"
+
+      - name: Create CI environment file
+        env:
+          CI_MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: |
+          if [[ "$CI_MONGO_URI" == mongodb* ]]; then
+            echo "MongoDB secret loaded correctly."
+          else
+            echo "MongoDB secret is NOT loaded correctly."
+            exit 1
+          fi
+
+          echo "NODE_ENV=production" > .env
+          echo "PORT=3000" >> .env
+          echo "MONGO_URI=$CI_MONGO_URI" >> .env
+          echo "JWT_SECRET=hustlehub-ci-docker-secret" >> .env
+          echo "FRONTEND_ORIGIN=http://localhost:5173" >> .env
+          echo "SSL_KEY_PATH=ssl/server.key" >> .env
+          echo "SSL_CERT_PATH=ssl/server.crt" >> .env
+
+      - name: Validate Docker Compose
+        run: docker compose config
+
+      - name: Build Docker containers
+        run: docker compose build
+
+      - name: Start Docker containers
+        run: docker compose up -d
+
+      - name: Wait for containers
+        run: |
+          echo "Waiting for HustleHub containers..."
+          sleep 15
+          docker compose ps
+
+      - name: Verify frontend container
+        run: |
+          curl \
+            --fail \
+            --silent \
+            --show-error \
+            http://localhost:5173
+
+      - name: Verify backend container
+        run: |
+          curl \
+            --insecure \
+            --fail \
+            --silent \
+            --show-error \
+            https://localhost:3000
+
+      - name: Show Docker logs on failure
+        if: failure()
+        run: |
+          docker compose logs || true
+
+      - name: Stop Docker containers
+        if: always()
+        run: |
+          docker compose down || true
+
+
+  # FINAL RESULT
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+
+    needs:
+      - backend
+      - frontend
+      - newman
+      - docker
+
+    steps:
+      - name: Confirm pipeline success
+        run: |
+          echo "Backend tests passed."
+          echo "Frontend tests passed."
+          echo "Static analysis passed."
+          echo "Security checks passed."
+          echo "Newman integration tests passed."
+          echo "Docker containers passed."
+          echo "HustleHub CI pipeline completed successfully."
