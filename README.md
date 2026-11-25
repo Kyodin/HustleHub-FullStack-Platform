@@ -1,22 +1,42 @@
-# HustleHub
+# HustleHub | Full-Stack Freelance Marketplace
 
-## INSY7314 - Final POE: Secure Full-Stack Marketplace
+**A secure, full-stack marketplace connecting clients and freelancers through a modern web application.**
 
-HustleHub is a web-based marketplace designed to connect clients and freelancers in one place.
+HustleHub is a comprehensive marketplace platform developed using React, Node.js, Express.js and MongoDB. The application enables freelancers to advertise services, clients to make bookings, and administrators to manage platform activity through role-specific dashboards.
 
-The Final POE builds on the secure backend and marketplace functionality completed during Part 1 and Part 2.
+Originally developed as a university group project for INSY7314, HustleHub demonstrates practical experience in full-stack software development, RESTful API design, authentication, application security, automated testing and containerisation.
 
-The system now includes the full React frontend, role-based access control, freelancer gigs, client bookings, transactions, income and tax information, administration functionality, automated testing, Docker containerisation, security logging, CI testing and additional security controls.
+## Technology Stack
 
-The system supports three user roles:
+| Category | Technologies |
+|---|---|
+| Frontend | React, JavaScript |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Authentication | JWT, Role-Based Access Control |
+| Security | Helmet, CSP, Rate Limiting, Input Validation, Account Lockout |
+| Testing | Jest, Supertest, Vitest, React Testing Library, Postman, Newman |
+| DevOps | Docker, Docker Compose, GitHub Actions |
+| Development Tools | Git, GitHub, ESLint |
 
-* Client
-* Freelancer
-* Admin
+## Key Features
 
-Each role has different permissions and access to different parts of the application.
+- **Multi-Role Authentication:** Secure registration, login and protected routes for clients, freelancers and administrators.
+- **Freelancer Marketplace:** Freelancers can create and manage service listings, while clients can browse and book available services.
+- **Booking and Transaction Management:** Booking creation, transaction tracking, cancellations and refund handling.
+- **Income and Tax Dashboard:** Freelancer income reporting, monthly summaries and estimated tax calculations based on SARS individual tax brackets.
+- **Administration Dashboard:** Centralised management of users, gigs, bookings and transactions.
+- **Application Security:** JWT authentication, authorisation middleware, rate limiting, input validation, security logging and account lockout protection.
+- **Automated Testing:** Frontend, backend and API testing supported by GitHub Actions workflows.
+- **Containerisation:** Docker and Docker Compose configurations for running the application.
 
-The main focus of the Final POE is to provide a complete working full-stack application while maintaining strong security, testing and application structure.
+## Project Leadership and Collaboration
+
+**Project Lead — Kyodin Pillay**
+
+HustleHub was developed collaboratively as part of an academic group project. I took on a project leadership role, helping guide the development process, coordinate contributions and support the delivery of the completed application.
+
+This repository showcases the group's development work and the technical experience gained throughout the project.
 
 ---
 
